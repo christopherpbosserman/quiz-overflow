@@ -1,47 +1,68 @@
 import React from 'react';
+import { decode } from 'html-entities';
 
-const Card = (props) => (
-/*  Render a div with a ptag containing card.question 
-        -- Render a labeltag and an inputtag  */
-        <div>
-<form onSubmit={(e) => {
-     e.preventDefault()
-     e.persist()
-     /*           ***              TESTING CONSOLE LOGS     ***             */
-    //  console.log('if it is the correct answer', e.target[0].attributes.iscorrect.value)
-    //  console.log('if 1st choice is checked', e.target[0].checked)
-    //  console.log(e.target)
-     for (let i = 0; i < 4; i++){
-         if(e.target[i].checked){
-           if(e.target[i].attributes.iscorrect.value === 'true') {
-               props.correctChoice(1) 
-               console.log('correct')
-               if(props.currentScore > props.highScore) {
-                 props.newHighScore(props.currentScore)
-                 props.updateHighScore(props.currentScore)
-                 console.log('New Highscore!!!')
-               }
-            }
-           else console.log('wrong');
-         } 
-     };
- }}>
-    <div>
-    <label>{props.card.question}</label><br></br>
-    <br></br>
-  <input type="radio" name="quiz" value="choice1" iscorrect={`${props.card.choices[0].is_correct}`} /> {props.card.choices[0].text}
-  <br></br>
-  <input type="radio" name="quiz" value="choice2" iscorrect={`${props.card.choices[1].is_correct}`} /> {props.card.choices[1].text}
-  <br></br>
-  <input type="radio" name="quiz" value="choice3" iscorrect={`${props.card.choices[2].is_correct}`} /> {props.card.choices[2].text}
-  <br></br>
-  <input type="radio" name="quiz" value="choice4" iscorrect={`${props.card.choices[3].is_correct}`} /> {props.card.choices[3].text}
-  </div><br></br>
-  <input className='submit' type='submit' value='submit'/>
-</form>
+const Card = (props) => {
+  // console.log('Card:render fired...');
+  const choices = props.card.choices;
 
-</div> 
-)
+  const onSubmit = (e) => {
+    // console.log('Card:onSubmit fired...');
+    e.preventDefault();
+
+    let selected = document.querySelector('input[name="quiz"]:checked');
+    if (selected) {
+      selected = selected.id.slice(-1);
+
+      if (choices[selected].is_correct) {
+        props.correctChoice(props.currentScore, props.highScore);
+        // props.getNewCard(props.deck);
+
+        // console.log('AAAAAAAAAAAAAAAAAA', props.currentScore, props.highScore);
+        // if (props.currentScore > props.highScore) {
+        //   props.newHighScore(props.currentScore);
+        //   props.updateHighScore(props.currentScore);
+        //   console.log('New Highscore!!!');
+        // }
+      }
+      props.getNewCard(props.deck);
+    }
+  };
+
+  let questArr = [];
+  for (let i = 0; i < 4; i++) {
+    questArr.push(
+      <div key={`question${i}`}>
+        <input
+          className="multipleChoice"
+          type="radio"
+          name="quiz"
+          id={`choice${i}`}
+        />
+        <label htmlFor={`choice${i}`}>{decode(choices[i].text)}</label>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card">
+      <form
+        onSubmit={(e) => {
+          onSubmit(e);
+        }}
+      >
+        <div className="questionContainer">
+          <div className="questionLabel">{decode(props.card.question)}</div>
+          <hr className="questionDivider"></hr>
+          {questArr}
+        </div>
+        <br />
+
+        <div className="questionSubmitBtnContainer">
+          <input className="questionSubmitBtn" type="submit" value="Submit" />
+        </div>
+      </form>
+    </div>
+  );
+};
 
 export default Card;
-

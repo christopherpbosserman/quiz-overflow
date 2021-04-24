@@ -1,56 +1,147 @@
+$primary-color: lightgray;
+$secondary-color: #9a8c98;
+$custom-black: rgb(58, 58, 58);
+$custom-green: rgb(0, 160, 0);
+$radius: 0.5rem;
+
+$primary-padding: 1rem;
+
+$first: #22223b;
+$second: #4a4e69;
+$third: #9a8c98;
+$fourth: #c9ada7;
+$fifth: #f2e9e4;
+
 body {
-  background-color: #0e6e96;
-  color: #091549;
+  font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  background-color: $fifth;
+  color: $custom-black;
+  font-size: 1rem;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
-.authContainer {
-  background-color: #5bc2d9;
-  padding: 10px;
-  width: 400px;
-  border-radius: 5px;
-  width: 260px;
+h1 {
+  font-size: 3rem;
+  // border: 1px solid orange;
+  margin: 0;
 }
 
-#login,
-#signup,
-#card {
-  border-radius: 5px;
-  background-color: #e1ccc3;
-  color: #1670c4;
-  padding: 10px;
-  width: 240px;
-  height: 150px;
-  box-shadow: 5px 3px 3px #091549;
-}
-#card {
-  border-radius: 10px;
-  background-color: #E1CCC3;
-  color: #1670c4;
-  padding: 10px;
-  width: 240px;
-  height: 355px;
-  box-shadow: 10px 5px 5px #091549;
-}
-
-#ccontainer {
-  border-radius: 10px;
-  background-color: #E1CCC3;
-  color: #1670c4;
-  padding: 10px;
-  width: 500px;
-  height: 355px;
-  box-shadow: 10px 5px 5px #091549;
-}
-.username,
-.password {
+.h1AndIconContainer {
   display: flex;
-  margin: 5px;
-  border-radius: 4px;
-  border-width: 0.5px;
-  border-color: lightgray;
-  width: 150px;
-  margin-bottom: 5px;
-  background-color: #5bc2d9;
+  justify-content: center;
+  padding: 2rem 2rem 2rem 2rem;
+}
+
+.iconContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 0.5rem;
+  width: 2.5rem;
+}
+
+.icon {
+  width: 100%;
+}
+
+.mainContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  padding: 0.7em;
+  margin: 0;
+  border: 1px solid lightgray;
+  border-radius: $radius;
+}
+
+.loginField {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.userName,
+.password,
+.signInBtn,
+.signUpBtn {
+  font-size: 1.3rem;
+}
+
+.userName,
+.password {
+  padding: 0.15rem 0.3rem;
+  color: lighten($custom-black, 10%);
+  line-height: 2.5rem;
+  width: 15rem;
+  border: 1px solid lightgray;
+  border-radius: $radius/2;
+}
+
+.userName:focus,
+.password:focus {
+  outline: 0;
+}
+
+.loginButtons {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  width: 100%;
+  margin: 1rem auto 0 auto;
+}
+
+.signUpBtn,
+.signInBtn {
+  box-shadow: 1px 1px 1px 1px lightgray;
+}
+
+.signUpBtn {
+  color: #fafafa;
+  background-color: $custom-green;
+  margin-top: 1rem;
+  transition: background-color 150ms;
+}
+
+.signUpBtn:hover {
+  background-color: lighten($custom-green, 5%);
+}
+
+.signUpBtn:active {
+  background-color: darken($custom-green, 5%);
+}
+
+.signInBtn {
+  margin-top: -0.5rem;
+  color: #fafafa;
+  background-color: steelblue;
+  transition: background-color 150ms;
+}
+
+.signInBtn:hover {
+  background-color: lighten(steelblue, 5%);
+}
+
+.signInBtn:active {
+  background-color: darken(steelblue, 5%);
+}
+
+.signInBtn,
+.signUpBtn {
+  border: 0px solid $second;
+  padding: 0.4rem;
+  border-radius: $radius / 2;
+  cursor: pointer;
+}
+
+.signInBtn:focus,
+.signUpBtn:focus {
+  outline: none;
 }
 
 .submit {
@@ -71,7 +162,6 @@ body {
 .submit:hover {
   cursor: pointer;
   background-color: darken(#0e6e96, 10%);
-  box-shadow: 3px 1px 1px #091549
 }
 
 a {
@@ -92,19 +182,173 @@ a {
 a:hover {
   background-color: darken(#5bc2d9, 10%);
   cursor: pointer;
-  box-shadow: 3px 1px 1px #091549
 }
 
-b {
-  display: flex-box;
-  flex-direction: row;
-  justify-content: flex-end;
-  justify-self: flex-end;
+.loginFooter {
+  display: flex;
+  justify-content: center;
+  margin: 0.2em;
+  padding: 0.5em;
+  font-size: 0.8em;
+  border-radius: $radius;
 }
-.errorMessage {
-  margin-top: 10px;
-  margin-left: 5px;
-  // background-color: red;
-  color: red;
-  font-size: 13px;
+
+.error {
+  color: #f25c54;
+}
+
+.guest {
+  color: rgb(185, 185, 185);
+  font-size: 1em;
+  margin-left: auto;
+  margin-top: auto;
+  cursor: pointer;
+}
+
+.multipleChoice {
+  margin: 1rem;
+}
+
+.multipleChoice:hover {
+  cursor: pointer;
+}
+
+.cardAndStatsContainer {
+  display: flex;
+}
+
+.cardContainer {
+  // max-width: 20rem;
+  z-index: 1;
+  position: relative;
+  background-color: #fff;
+}
+
+.card {
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0;
+  width: 100%;
+  padding: 2rem;
+  border: 0.1rem solid rgb(187, 187, 187);
+  border-radius: $radius;
+}
+
+.playerStatsContainer {
+  display: inline-block;
+  height: 20%;
+  max-height: 5.35rem;
+  color: white;
+  padding: 0 1rem 0 0.8rem;
+  position: relative;
+  top: 1rem;
+  left: -9.5rem;
+  z-index: 0;
+  width: 8.5rem;
+  background-color: orange;
+  border-top-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  transition: all 250ms;
+}
+
+.playerStatsContainer:hover {
+  cursor: pointer;
+  left: 0%;
+}
+
+.getNewQuestionBtn {
+  border: 1px solid orange;
+  grid-column-start: 2;
+  grid-row-start: 2;
+}
+
+.questionLabel {
+  padding-bottom: 2rem;
+}
+
+.invisible {
+  opacity: 0;
+}
+
+.styleExperiment {
+  border: 1px solid orange;
+}
+
+// Line between question and multiple choices
+.questionDivider {
+  border: 0.5px solid lighten($custom-black, 55%);
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.questionSubmitBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.questionSubmitBtn {
+  background-color: $custom-green;
+  border: 0;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: $radius;
+  font-size: 1rem;
+  width: 8rem;
+  transition: background-color 75ms;
+}
+
+.questionSubmitBtn:hover {
+  cursor: pointer;
+  background-color: darken($custom-green, 5%);
+}
+
+.questionSubmitBtn:active {
+  background-color: lighten($custom-green, 5%);
+}
+
+.feedbackContainer {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+}
+
+.correctFeedback {
+  font-size: 3rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 1;
+  height: 5rem;
+  width: 5rem;
+  background-color: $custom-green;
+  border-radius: 100px;
+  animation: fade 4s ease-out forwards;
+}
+
+.incorrectFeedback {
+  font-size: 3rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 1;
+  height: 5rem;
+  width: 5rem;
+  background-color: rgb(233, 0, 0);
+  border-radius: 100px;
+  // animation: fade 2s linear forwards;
+}
+
+@keyframes fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

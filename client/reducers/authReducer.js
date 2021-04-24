@@ -10,13 +10,8 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.POST_LOGIN_REQUEST: {
-      return {
-        ...state,
-      };
-    }
     case types.POST_LOGIN_SUCCESS: {
-      console.log('in reducer', action);
+      console.log('authReducer:POST_LOGIN_SUCCESS');
       const { loggedIn, message, loginFailure } = action.payload;
       return {
         ...state,
@@ -55,6 +50,12 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         showSignup: action.payload,
+      };
+    }
+    case types.LOGIN_STATUS: {
+      return {
+        ...state,
+        loggedIn: action.payload,
       };
     }
     default: {

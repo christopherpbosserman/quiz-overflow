@@ -1,59 +1,72 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PlayerStats from '../components/PlayerStats';
 import Card from '../components/Card';
-import { correctChoice, getNewCard, updateHighScore, getHighScore, newHighScore } from '../actions/actions';
+import CheckAnswer from '../components/CheckAnswer';
 
-const mapStateToProps = state => ({
-    card: state.quiz.card,
-    cardsThisSession: state.quiz.cardsThisSession,
-    correctAnswers: state.quiz.correctAnswers,
-    currentScore: state.quiz.currentScore,
-    highScore: state.quiz.highScore,
+import {
+  correctChoice,
+  getNewDeck,
+  updateHighScore,
+  getHighScore,
+  newHighScore,
+  getNewCard,
+} from '../actions/actions';
+
+const mapStateToProps = (state) => ({
+  card: state.quiz.card,
+  cardsThisSession: state.quiz.cardsThisSession,
+  correctAnswers: state.quiz.correctAnswers,
+  deck: state.quiz.deck,
+  // new component?
+  currentScore: state.quiz.currentScore,
+  highScore: state.quiz.highScore,
 });
 
 const mapDispatchToProps = {
-    getNewCard, 
-    correctChoice,
-    getHighScore, 
-    updateHighScore,
-    newHighScore,
-}
+  getNewDeck,
+  correctChoice,
+  getHighScore,
+  updateHighScore,
+  newHighScore,
+  getNewCard,
+};
 
 class CardContainer extends Component {
-    constructor(props){
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    componentDidMount () {
-        this.props.getHighScore();
-        }
+  componentDidMount() {
+    // console.log('CardContainer componentDidMount fired...');
+    this.props.getNewDeck();
+  }
 
-    render() {
-        console.log('props in cardcontainer', this.props)
-        return(
-            <div id="card">
-            <Card 
-            getNewCard={this.props.getNewCard}
+  render() {
+    // console.log('CardContainer render fired...');
+    return (
+      <div className="cardAndStatsContainer">
+        <PlayerStats className="playerStatsContainer invisible" />
+
+        <div className="cardContainer">
+          <Card
             currentScore={this.props.currentScore}
             newHighScore={this.props.newHighScore}
             highScore={this.props.highScore}
             updateHighScore={this.props.updateHighScore}
             correctAnswers={this.props.correctAnswers}
             correctChoice={this.props.correctChoice}
-            cardsThisSession={this.props.cardsThisSession}
             card={this.props.card}
-            />
-            <div>
-            <p>High Score: {this.props.highScore}</p>
-            <p>Current Score: {this.props.currentScore}</p>
-            <a onClick={() => this.props.getNewCard()}>Next Question</a>
-            </div>
-            </div>
-        )
-    }
+            getNewCard={this.props.getNewCard}
+            deck={this.props.deck}
+          />
+        <CheckAnswer card={this.props.card} currentScore={this.props.currentScore}/>
+        </div>
+        <PlayerStats className="playerStatsContainer" />
+      </div>
+    );
+  }
 }
-
-
 
 /*  Once props are mapped connect will be used here  */
 export default connect(mapStateToProps, mapDispatchToProps)(CardContainer);
