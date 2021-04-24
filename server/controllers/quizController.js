@@ -1,43 +1,63 @@
-const db = require('../models/quizModels');
+const fetch = require('node-fetch');
+
 const quizController = {};
+
+const questions = [];
+let anyMoreQuestions = true;
 
 quizController.getQuestion = (req, res, next) => {
   if (res.locals.cookieSessionMatch) {
-    console.log('get question fired');
-    //grab random record from quiz question table
-    const queryQuestion = `SELECT *
-                        FROM quiz_question
-                        ORDER BY RANDOM()
-                        LIMIT 1`;
+    // check if questions is empty, send response "OUT OF QUESTIONS"
 
-    db.query(queryQuestion)
-      .then((result) => {
-        //create const to hold value of question ID
-        const randQuestionId = result.rows[0]._id;
-        //create const to hold value of question text
-        const randQuestionText = result.rows[0].text;
-        res.locals.question = randQuestionText;
-        console.log(randQuestionId, `${res.locals.question}`);
-        //selected id,text, and is correct from quiz questions table, only grabbing questions which match random question ID
-        const queryChoices = `SELECT 
-                                c._id, 
-                                c.text, 
-                                c.is_correct
-                            FROM
-                                quiz_question_choices c
-                            WHERE
-                            c.quiz_question_id = ${randQuestionId}`;
+    if (!anyMoreQuestions) {
+      res.locals.questions = null;
+      return next();
+    }
 
-        db.query(queryChoices).then((qResult) => {
-          //choices const holds array of questions
-          res.locals.choices = qResult.rows;
-          console.log(res.locals.choices);
+    // if empty, call api, fill up questions
+    if (!questions.length) {
+      fetch('https://opentdb.com/api.php?amount=50&category=18&type=multiple')
+        .then((data) => data.json())
+        .then((data) => {
+          if (data.response_code) {
+            res.locals.questions = null;
+            return next();
+          }
+          const { results } = data;
+
+          const output = results.map((el) => {
+            // error check el?
+            const { question, correct_answer, incorrect_answers } = el;
+            const choices = [];
+            choices.push({ text: correct_answer, is_correct: true });
+            const wrong = incorrect_answers.map((ele) => {
+              return { text: ele, is_correct: false };
+            });
+            choices.push(...wrong);
+
+            const randomNum = Math.floor(Math.random() * 4);
+            for (let i = 0; i < randomNum; i++) {
+              choices.unshift(choices.pop());
+            }
+
+            return { question, choices };
+          });
+
+          questions.push(...output);
+
+          res.locals.questions = questions.splice(questions.length - 5);
+          // console.log(res.locals.questions);
           return next();
         });
-      })
-      .catch((err) => next(err));
+    } else {
+      res.locals.questions = questions.splice(questions.length - 5);
+      // console.log('rest: ',res.locals.questions[0]['choices'] )
+      anyMoreQuestions = !!questions.length;
+      return next();
+    }
   } else {
     return next();
   }
 };
+
 module.exports = quizController;
