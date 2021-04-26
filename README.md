@@ -9,29 +9,22 @@ Get as many right as possible.
 Install all packages and compile the files.
 
 ```
-npm i
+npm install
 npm run build
 ```
 
-Create a `.env` file in the root directory of the project to store the ElephantQL database URI.
+Create a `.env` file in the root directory of the project to store the Postgress database URI.
 
 ```
-pgURI='ElephantQL database URI'
+PGURI='Postgress database URI'
 ```
 
-After installation is complete, run your dev server.
+After installation is complete, start your server.
 
 ```
-npm run dev
+npm run start
 ```
 
-## Contributors
+## Database Schema
 
-- @christopherpbosserman - Christopher Bosserman
-- @m-aung - Myo Aung
-- @nickstillman - Nick Stillman
-- @anthonycruz1 - Anthony Cruz
-- @Carthanial - Christopher Carney
-- @dwaynerichards - Dwayne Richards
-- @john-li7 - John Li
-- @unknownbreaker - Robert Yang
+Full database schema and population scripts will be provided in the next release.
