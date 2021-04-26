@@ -1,25 +1,24 @@
 {
   "name": "quiz-overflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
     "start": "node server/server.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack serve & nodemon server/server.js",
-    "windows": "concurrently \"NODE_ENV=development nodemon server/server.js\" \"NODE_ENV=development webpack serve --open\""
+    "dev": "NODE_ENV=development webpack serve & nodemon --delay 1 server/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dwaynerichards/quiz-overflow.git"
+    "url": "git+https://github.com/quiz-overflow/quiz-overflow.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dwaynerichards/quiz-overflow/issues"
+    "url": "https://github.com/quiz-overflow/quiz-overflow/issues"
   },
-  "homepage": "https://github.com/dwaynerichards/quiz-overflow#readme",
+  "homepage": "https://github.com/quiz-overflow/quiz-overflow#readme",
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
