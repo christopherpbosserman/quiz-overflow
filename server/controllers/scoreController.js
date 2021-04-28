@@ -4,7 +4,7 @@ const scoreController = {};
 
 scoreController.getHighScore = (req, res, next) => {
   if (res.locals.cookieSessionMatch) {
-    const getScoreQuery = `SELECT high_score FROM high_score WHERE users_id = ${req.cookies.ssid}`;
+    const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${req.cookies.SSID}`;
     db.query(getScoreQuery, (err, queryRes) => {
       if (err) {
         console.log('error in getHighScore: ', err);
@@ -27,7 +27,7 @@ scoreController.updateHighScore = (req, res, next) => {
     console.log(req.body);
     console.log(typeof req.body.score);
     if (req.body.score > res.locals.highScore) {
-      const updateScoreQuery = `UPDATE high_score SET high_score = ${req.body.score} WHERE users_id = ${req.cookies.ssid}`;
+      const updateScoreQuery = `UPDATE users SET high_score = ${req.body.score} WHERE users._id = ${req.cookies.SSID}`;
       db.query(updateScoreQuery, (err, queryRes) => {
         if (err) {
           console.log('error in updateHighScore: ', err);
