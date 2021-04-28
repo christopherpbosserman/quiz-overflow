@@ -12,8 +12,8 @@ const questionController = require('./controllers/questionController');
 
 const app = express();
 
-app.use(urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
@@ -28,14 +28,32 @@ app.get('/check-session', sessionController.isLoggedIn, (req, res) => {
   return res.status(200).json(res.locals.cookieSessionMatch);
 });
 
+// app.post(
+//   '/signup',
+//   userController.createUser,
+//   cookieController.setSSIDCookie,
+//   sessionController.startSession,
+//   (req, res) => {
+//     // on failed signup, send boolean false
+//     if (res.locals.usernameExists) {
+//       return res
+//         .status(200)
+//         .json({ message: 'Username already taken!', loggedIn: false });
+//     }
+//     // on successful signup, send boolean true
+//     return res.status(200).json({ message: 'New user added!', loggedIn: true });
+//   }
+// );
+
 app.post(
   '/signup',
-  userController.createUser,
+  userController.checkUsernameExists,
+  userController.createUser2,
   cookieController.setSSIDCookie,
   sessionController.startSession,
   (req, res) => {
     // on failed signup, send boolean false
-    if (res.locals.alreadyExists) {
+    if (res.locals.usernameExists) {
       return res
         .status(200)
         .json({ message: 'Username already taken!', loggedIn: false });
@@ -82,7 +100,7 @@ app.get(
 
 app.get(
   '/quiz-overflowDB',
-  // sessionController.isLoggedIn,
+  sessionController.isLoggedIn,
   quizControllerDB.getQuestion,
   (req, res) => {
     console.log('session cookieSessionMatch', res.locals.cookieSessionMatch);
@@ -133,8 +151,14 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log('error handler', err);
-  return res.status(500).send('Internal Server Error');
+  const defaultErr = {
+    log: 'Express error handler caught unknown middleware error',
+    status: 500,
+    message: { err: 'An error occurred' },
+  };
+  const errorObj = Object.assign({}, defaultErr, err);
+  console.log(errorObj.log);
+  return res.status(errorObj.status).json(errorObj.message);
 });
 
 app.listen(3000, () => {
