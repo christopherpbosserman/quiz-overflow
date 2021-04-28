@@ -28,43 +28,26 @@ app.get('/check-session', sessionController.isLoggedIn, (req, res) => {
   return res.status(200).json(res.locals.cookieSessionMatch);
 });
 
-// app.post(
-//   '/signup',
-//   userController.createUser,
-//   cookieController.setSSIDCookie,
-//   sessionController.startSession,
-//   (req, res) => {
-//     // on failed signup, send boolean false
-//     if (res.locals.usernameExists) {
-//       return res
-//         .status(200)
-//         .json({ message: 'Username already taken!', loggedIn: false });
-//     }
-//     // on successful signup, send boolean true
-//     return res.status(200).json({ message: 'New user added!', loggedIn: true });
-//   }
-// );
-
 app.post(
   '/signup',
   userController.checkUsernameExists,
-  userController.createUser2,
+  userController.encryptPassword,
+  userController.createUser,
   cookieController.setSSIDCookie,
   sessionController.startSession,
   (req, res) => {
-    // on failed signup, send boolean false
     if (res.locals.usernameExists) {
       return res
         .status(200)
-        .json({ message: 'Username already taken!', loggedIn: false });
+        .json({ message: 'Username already taken.', loggedIn: false });
     }
-    // on successful signup, send boolean true
     return res.status(200).json({ message: 'New user added!', loggedIn: true });
   }
 );
 
 app.post(
   '/login',
+  userController.encryptPassword,
   userController.verifyUser,
   cookieController.setSSIDCookie,
   sessionController.startSession,
@@ -87,7 +70,6 @@ app.get(
   sessionController.isLoggedIn,
   quizController.getQuestion,
   (req, res) => {
-    console.log('session cookieSessionMatch', res.locals.cookieSessionMatch);
     // after frontend is ready to test, see if we can redirect to '/' in the case a session expires
     // after logging in or if we need to send a res.locals with empty key values for question and choices.
 
