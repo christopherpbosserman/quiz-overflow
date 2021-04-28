@@ -22,19 +22,17 @@ sessionController.startSession = (req, res, next) => {
 };
 
 sessionController.isLoggedIn = (req, res, next) => {
-  console.log('sessionController.isLoggedIn fired...', req.cookies.SSID);
+  console.log('sessionController.isLoggedIn fired...');
   if (!isNaN(req.cookies.SSID)) {
     // if user has a SSID cookie that is a number then will check for active session
     const query = `SELECT * FROM sessions WHERE cookie_id = ${req.cookies.SSID} AND expires_by > NOW()`;
     db.query(query, (err, queryRes) => {
-      console.log(queryRes.rows);
       if (err) {
         console.log('err in isLoggedIn ', err);
         return next(err);
       } else {
         if (queryRes.rows.length) {
           res.locals.cookieSessionMatch = true;
-          console.log('yo', res.locals.cookieSessionMatch);
           return next();
         } else {
           res.locals.cookieSessionMatch = false;
