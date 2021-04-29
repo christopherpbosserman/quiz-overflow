@@ -3,8 +3,9 @@ const db = require('../models/quizModels');
 const scoreController = {};
 
 scoreController.getHighScore = (req, res, next) => {
-  if (res.locals.cookieSessionMatch) {
-    const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${req.cookies.SSID}`;
+  console.log('scoreController.getHighScore fired...');
+  if (res.locals.isLoggedIn) {
+    const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${res.locals.userID}`;
     db.query(getScoreQuery, (err, queryRes) => {
       if (err) {
         console.log('error in getHighScore: ', err);
@@ -12,7 +13,7 @@ scoreController.getHighScore = (req, res, next) => {
       } else if (!queryRes.rows[0]) {
         res.locals.highScore = 0;
       } else {
-        console.log('high score: ', queryRes.rows[0].high_score);
+        // console.log('high score: ', queryRes.rows[0].high_score);
         res.locals.highScore = queryRes.rows[0].high_score;
       }
       return next();
@@ -23,11 +24,11 @@ scoreController.getHighScore = (req, res, next) => {
 };
 
 scoreController.updateHighScore = (req, res, next) => {
-  if (res.locals.cookieSessionMatch) {
+  if (res.locals.isLoggedIn) {
     console.log(req.body);
     console.log(typeof req.body.score);
     if (req.body.score > res.locals.highScore) {
-      const updateScoreQuery = `UPDATE users SET high_score = ${req.body.score} WHERE users._id = ${req.cookies.SSID}`;
+      const updateScoreQuery = `UPDATE users SET high_score = ${req.body.score} WHERE users._id = ${res.locals.userID}`;
       db.query(updateScoreQuery, (err, queryRes) => {
         if (err) {
           console.log('error in updateHighScore: ', err);

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { NormalModuleReplacementPlugin } = require('webpack');
 
 const db = require('../models/quizModels');
 
@@ -68,27 +69,53 @@ userController.createUser = (req, res, next) => {
   }
 };
 
-userController.verifyUser = (req, res, next) => {
-  console.log('userController.verifyUser fired...');
-  const { username } = req.body;
-  const { encryptedPassword } = res.locals;
+userController.verifyPassword = (req, res, next) => {
+  console.log('userController.verifyPassword fired...');
+  const { username, password } = req.body;
   const query =
-    'SELECT _id, username FROM users WHERE username = ($1) AND password = ($2)';
-  const values = [username, encryptedPassword];
-  db.query(query, values)
-    .then((resp) => {
-      if (resp.rows.length) {
-        res.locals.userID = resp.rows[0]._id;
-        res.locals.loggedIn = true;
-        return next();
-      } else return next();
-    })
-    .catch((err) => {
-      return next({
-        log: `Error in userController.verifyUser middleware: ${err}`,
-        message: { err: 'An error occurred' },
+    'SELECT password AS encryptedpassword FROM users WHERE username = ($1)';
+  const values = [username];
+  db.query(query, values).then((resp) => {
+    if (resp.rows.length) {
+      console.log(resp.rows[0]);
+      const { encryptedpassword } = resp.rows[0];
+      console.log(password, encryptedpassword);
+      bcrypt.compare(password, encryptedpassword).then((resp) => {
+        if (resp) {
+          res.locals.loggedIn = true;
+          return next();
+        } else {
+          res.locals.loggedIn = false;
+          return next();
+        }
       });
-    });
+    } else {
+      res.locals.loggedIn = false;
+      return next();
+    }
+  });
+};
+
+userController.getUserInfo = (req, res, next) => {
+  console.log('userController.getUserInfo fired...');
+  if (res.locals.loggedIn) {
+    const { username } = req.body;
+    const query = 'SELECT _id, username FROM users WHERE username = ($1)';
+    const values = [username];
+    db.query(query, values)
+      .then((resp) => {
+        if (resp.rows.length) {
+          res.locals.userID = resp.rows[0]._id;
+          return next();
+        } else return next();
+      })
+      .catch((err) => {
+        return next({
+          log: `Error in userController.getUserInfo middleware: ${err}`,
+          message: { err: 'An error occurred' },
+        });
+      });
+  } else return next();
 };
 
 module.exports = userController;
