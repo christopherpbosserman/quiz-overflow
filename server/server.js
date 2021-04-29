@@ -24,10 +24,15 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
 
-app.get('/check-session', sessionController.verifySession, (req, res) => {
-  // console.log('session isLoggedIn', res.locals.isLoggedIn);
-  return res.status(200).json(res.locals.isLoggedIn);
-});
+app.get(
+  '/check-session',
+  sessionController.verifySession,
+  sessionController.verifySessionJWT,
+  (req, res) => {
+    // console.log('session isLoggedIn', res.locals.isLoggedIn);
+    return res.status(200).json(res.locals.isLoggedIn);
+  }
+);
 
 app.post(
   '/signup',
@@ -35,6 +40,7 @@ app.post(
   userController.encryptPassword,
   userController.createUser,
   cookieController.setSSIDCookie,
+  cookieController.setSSIDJWT,
   sessionController.startSession,
   (req, res) => {
     if (res.locals.usernameExists) {
@@ -70,6 +76,7 @@ app.post(
 app.get(
   '/quiz-overflow',
   sessionController.verifySession,
+  sessionController.verifySessionJWT,
   quizController.getQuestion,
   (req, res) => {
     // after frontend is ready to test, see if we can redirect to '/' in the case a session expires
@@ -85,6 +92,8 @@ app.get(
 app.get(
   '/quiz-overflowDB',
   sessionController.verifySession,
+  sessionController.verifySessionJWT,
+
   quizControllerDB.getQuestion,
   (req, res) => {
     // console.log('session isLoggedIn', res.locals.isLoggedIn);

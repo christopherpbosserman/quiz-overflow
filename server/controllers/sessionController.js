@@ -1,6 +1,9 @@
-var jwt = require('jsonwebtoken');
+let jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const db = require('../models/quizModels');
+
+const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 
 const sessionController = {};
 
@@ -76,25 +79,20 @@ sessionController.verifySession = (req, res, next) => {
     });
 };
 
-sessionController.startSessionJWT = (req, res, next) => {
-  console.log('sessionController.startSessionJWT fired...');
-  if (res.locals.loggedIn) {
-    const sessionTime = '10 minutes';
-    const query = ` INSERT INTO 
-                    sessions (session_id, user_id, expires_by)
-                    VALUES
-                    ('${res.locals.sessionID}', ${res.locals.userID}, NOW() + interval '${sessionTime}')`;
-    db.query(query)
-      .then((resp) => {
-        return next();
-      })
-      .catch((err) => {
-        return next({
-          log: `Error in sessionController.startSession middleware: ${err}`,
-          message: { err: 'An error occurred' },
-        });
-      });
-  } else return next();
+sessionController.verifySessionJWT = (req, res, next) => {
+  console.log('sessionController.verifySessionJWT fired...');
+  const { SSID } = req.cookies;
+
+  jwt.verify(SSID, JWT_PRIVATE_KEY, (err, payload) => {
+    if (err) {
+      res.locals.isLoggedIn = false;
+      return next();
+    } else {
+      res.locals.userID = payload.userID;
+      res.locals.isLoggedIn = true;
+      return next();
+    }
+  });
 };
 
 module.exports = sessionController;
