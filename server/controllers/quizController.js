@@ -6,7 +6,7 @@ const questions = [];
 let anyMoreQuestions = true;
 
 quizController.getQuestion = (req, res, next) => {
-  if (res.locals.cookieSessionMatch) {
+  if (res.locals.isLoggedIn) {
     // check if questions is empty, send response "OUT OF QUESTIONS"
 
     if (!anyMoreQuestions) {

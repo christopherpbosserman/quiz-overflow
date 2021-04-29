@@ -23,9 +23,9 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
 
-app.get('/check-session', sessionController.isLoggedIn, (req, res) => {
-  console.log('session cookieSessionMatch', res.locals.cookieSessionMatch);
-  return res.status(200).json(res.locals.cookieSessionMatch);
+app.get('/check-session', sessionController.verifySession, (req, res) => {
+  // console.log('session isLoggedIn', res.locals.isLoggedIn);
+  return res.status(200).json(res.locals.isLoggedIn);
 });
 
 app.post(
@@ -48,7 +48,8 @@ app.post(
 app.post(
   '/login',
   userController.encryptPassword,
-  userController.verifyUser,
+  userController.verifyPassword,
+  userController.getUserInfo,
   cookieController.setSSIDCookie,
   sessionController.startSession,
   (req, res) => {
@@ -67,13 +68,13 @@ app.post(
 
 app.get(
   '/quiz-overflow',
-  sessionController.isLoggedIn,
+  sessionController.verifySession,
   quizController.getQuestion,
   (req, res) => {
     // after frontend is ready to test, see if we can redirect to '/' in the case a session expires
     // after logging in or if we need to send a res.locals with empty key values for question and choices.
 
-    if (!res.locals.cookieSessionMatch) {
+    if (!res.locals.isLoggedIn) {
       return res.status(200).json('Invalid session');
     }
     return res.status(200).json(res.locals);
@@ -82,11 +83,11 @@ app.get(
 
 app.get(
   '/quiz-overflowDB',
-  sessionController.isLoggedIn,
+  sessionController.verifySession,
   quizControllerDB.getQuestion,
   (req, res) => {
-    console.log('session cookieSessionMatch', res.locals.cookieSessionMatch);
-    // if (!res.locals.cookieSessionMatch) {
+    // console.log('session isLoggedIn', res.locals.isLoggedIn);
+    // if (!res.locals.isLoggedIn) {
     //   return res.status(200).json('Invalid session');
     // }
     return res.status(200).json(res.locals);
@@ -95,10 +96,12 @@ app.get(
 
 app.get(
   '/high-score',
-  sessionController.isLoggedIn,
+  sessionController.verifySession,
+  userController.getUserInfo,
+
   scoreController.getHighScore,
   (req, res) => {
-    if (!res.locals.cookieSessionMatch) {
+    if (!res.locals.isLoggedIn) {
       return res.status(200).json('Invalid session');
     }
     return res.status(200).json(res.locals);
@@ -107,12 +110,14 @@ app.get(
 
 app.put(
   '/high-score',
-  sessionController.isLoggedIn,
+  sessionController.verifySession,
+  userController.getUserInfo,
+
   scoreController.getHighScore,
   scoreController.updateHighScore,
   // scoreController.getHighScore,
   (req, res) => {
-    if (!res.locals.cookieSessionMatch) {
+    if (!res.locals.isLoggedIn) {
       return res.status(200).json('Invalid session');
     }
     return res.status(200).json(res.locals);
