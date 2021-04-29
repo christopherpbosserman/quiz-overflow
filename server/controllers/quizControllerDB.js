@@ -3,8 +3,9 @@ const db = require('../models/quizModels');
 const quizControllerDB = {};
 
 quizControllerDB.getQuestion = (req, res, next) => {
+  console.log('quizControllerDB.getQuestion fired...');
   if (res.locals.isLoggedIn || true) {
-    console.log('get question fired');
+    // console.log('get question fired');
     //grab random record from quiz question table
     const queryQuestion = `SELECT *
     FROM quiz_question

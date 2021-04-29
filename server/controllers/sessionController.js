@@ -61,6 +61,7 @@ sessionController.verifySession = (req, res, next) => {
     .then((resp) => {
       if (resp.rows.length) {
         res.locals.isLoggedIn = true;
+        res.locals.userID = resp.rows[0].user_id;
         return next();
       } else {
         res.locals.isLoggedIn = false;

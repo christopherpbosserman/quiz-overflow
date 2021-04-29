@@ -3,7 +3,7 @@ const db = require('../models/quizModels');
 const scoreController = {};
 
 scoreController.getHighScore = (req, res, next) => {
-  console.log('scoreController.getHighScore fired...', res.locals);
+  console.log('scoreController.getHighScore fired...');
   if (res.locals.isLoggedIn) {
     const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${res.locals.userID}`;
     db.query(getScoreQuery, (err, queryRes) => {
@@ -13,7 +13,7 @@ scoreController.getHighScore = (req, res, next) => {
       } else if (!queryRes.rows[0]) {
         res.locals.highScore = 0;
       } else {
-        console.log('high score: ', queryRes.rows[0].high_score);
+        // console.log('high score: ', queryRes.rows[0].high_score);
         res.locals.highScore = queryRes.rows[0].high_score;
       }
       return next();
