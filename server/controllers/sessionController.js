@@ -1,4 +1,9 @@
+let jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const db = require('../models/quizModels');
+
+const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 
 const sessionController = {};
 
@@ -50,8 +55,6 @@ sessionController.startSession = (req, res, next) => {
 
 sessionController.verifySession = (req, res, next) => {
   console.log('sessionController.verifySession fired...');
-  // if (!isNaN(req.cookies.SSID)) {
-  // if user has a SSID cookie that is a number then will check for active session
   const { SSID } = req.cookies;
   const query =
     'SELECT * FROM sessions WHERE session_id = ($1) AND expires_by > NOW()';
@@ -74,10 +77,22 @@ sessionController.verifySession = (req, res, next) => {
         message: { err: 'An error occurred' },
       });
     });
-  // } else {
-  //   res.locals.isLoggedIn = false;
-  //   return next();
-  // }
+};
+
+sessionController.verifySessionJWT = (req, res, next) => {
+  console.log('sessionController.verifySessionJWT fired...');
+  const { SSID } = req.cookies;
+
+  jwt.verify(SSID, JWT_PRIVATE_KEY, (err, payload) => {
+    if (err) {
+      res.locals.isLoggedIn = false;
+      return next();
+    } else {
+      res.locals.userID = payload.userID;
+      res.locals.isLoggedIn = true;
+      return next();
+    }
+  });
 };
 
 module.exports = sessionController;
