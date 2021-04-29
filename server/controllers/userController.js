@@ -12,6 +12,7 @@ userController.checkUsernameExists = (req, res, next) => {
   const { username } = req.body;
   const query = 'SELECT username FROM users WHERE username = ($1)';
   const values = [username];
+
   db.query(query, values)
     .then((resp) => {
       if (resp.rows.length) {
@@ -29,6 +30,7 @@ userController.checkUsernameExists = (req, res, next) => {
 
 userController.encryptPassword = (req, res, next) => {
   const { password } = req.body;
+
   bcrypt
     .hash(password, SALT_WORK_FACTOR)
     .then((resp) => {
@@ -75,6 +77,7 @@ userController.verifyPassword = (req, res, next) => {
   const query =
     'SELECT password AS encryptedpassword FROM users WHERE username = ($1)';
   const values = [username];
+
   db.query(query, values).then((resp) => {
     if (resp.rows.length) {
       console.log(resp.rows[0]);
@@ -98,9 +101,10 @@ userController.verifyPassword = (req, res, next) => {
 
 userController.getUserInfo = (req, res, next) => {
   console.log('userController.getUserInfo fired...');
+
   if (res.locals.loggedIn) {
     const { username } = req.body;
-    const query = 'SELECT _id, username FROM users WHERE username = ($1)';
+    const query = 'SELECT _id FROM users WHERE username = ($1)';
     const values = [username];
     db.query(query, values)
       .then((resp) => {
