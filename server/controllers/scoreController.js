@@ -13,7 +13,6 @@ scoreController.getHighScore = (req, res, next) => {
       } else if (!queryRes.rows[0]) {
         res.locals.highScore = 0;
       } else {
-        // console.log('high score: ', queryRes.rows[0].high_score);
         res.locals.highScore = queryRes.rows[0].high_score;
       }
       return next();

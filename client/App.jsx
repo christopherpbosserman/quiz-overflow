@@ -6,7 +6,7 @@ import CardContainer from './containers/CardContainer';
 import * as authActions from './actions/authActions';
 
 const mapStateToProps = (state) => ({
-  loggedIn: state.auth.loggedIn,
+  isLoggedIn: state.auth.isLoggedIn,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -30,7 +30,7 @@ class App extends Component {
 
   render() {
     // console.log('App render fired...');
-    const auth = this.props.loggedIn ? <CardContainer /> : <AuthContainer />;
+    const auth = this.props.isLoggedIn ? <CardContainer /> : <AuthContainer />;
     return <div className="mainContainer">{auth}</div>;
   }
 }

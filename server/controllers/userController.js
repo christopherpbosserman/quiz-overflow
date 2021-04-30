@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const { NormalModuleReplacementPlugin } = require('webpack');
 
 const db = require('../models/quizModels');
 
@@ -7,8 +6,8 @@ const SALT_WORK_FACTOR = 6;
 
 const userController = {};
 
-userController.checkUsernameExists = (req, res, next) => {
-  console.log('userController.checkUsernameExists fired...');
+userController.checkIfUsernameExists = (req, res, next) => {
+  console.log('userController.checkIfUsernameExists fired...');
   const { username } = req.body;
   const query = 'SELECT username FROM users WHERE username = ($1)';
   const values = [username];
@@ -16,19 +15,20 @@ userController.checkUsernameExists = (req, res, next) => {
   db.query(query, values)
     .then((resp) => {
       if (resp.rows.length) {
-        res.locals.usernameExists = true;
+        res.locals.usernameTaken = true;
         return next();
       } else return next();
     })
     .catch((err) => {
       return next({
-        log: `Error in userController.checkUsernameExists middleware: ${err}`,
+        log: `Error in userController.checkIfUsernameExists middleware: ${err}`,
         message: { err: 'An error occurred' },
       });
     });
 };
 
 userController.encryptPassword = (req, res, next) => {
+  console.log('userController.encryptPassword fired...');
   const { password } = req.body;
 
   bcrypt
@@ -53,11 +53,11 @@ userController.createUser = (req, res, next) => {
     'INSERT INTO users (username, password, high_score) VALUES ($1, $2, $3) RETURNING _id';
   const values = [username, encryptedPassword, 0];
 
-  if (!res.locals.usernameExists) {
+  if (!res.locals.usernameTaken) {
     db.query(query, values)
       .then((resp) => {
         res.locals.userID = resp.rows[0]._id;
-        res.locals.loggedIn = true;
+        res.locals.isLoggedIn = true;
         return next();
       })
       .catch((err) => {
@@ -80,29 +80,28 @@ userController.verifyPassword = (req, res, next) => {
 
   db.query(query, values).then((resp) => {
     if (resp.rows.length) {
-      console.log(resp.rows[0]);
       const { encryptedpassword } = resp.rows[0];
-      console.log(password, encryptedpassword);
+
       bcrypt.compare(password, encryptedpassword).then((resp) => {
         if (resp) {
-          res.locals.loggedIn = true;
+          res.locals.isLoggedIn = true;
           return next();
         } else {
-          res.locals.loggedIn = false;
+          res.locals.isLoggedIn = false;
           return next();
         }
       });
     } else {
-      res.locals.loggedIn = false;
+      res.locals.isLoggedIn = false;
       return next();
     }
   });
 };
 
-userController.getUserInfo = (req, res, next) => {
-  console.log('userController.getUserInfo fired...');
+userController.getUserID = (req, res, next) => {
+  console.log('userController.getUserID fired...');
 
-  if (res.locals.loggedIn) {
+  if (res.locals.isLoggedIn) {
     const { username } = req.body;
     const query = 'SELECT _id FROM users WHERE username = ($1)';
     const values = [username];
@@ -115,7 +114,7 @@ userController.getUserInfo = (req, res, next) => {
       })
       .catch((err) => {
         return next({
-          log: `Error in userController.getUserInfo middleware: ${err}`,
+          log: `Error in userController.getUserID middleware: ${err}`,
           message: { err: 'An error occurred' },
         });
       });
