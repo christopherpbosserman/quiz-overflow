@@ -30,8 +30,8 @@ export const postLogin = ({ username, password }) => (dispatch) => {
   })
     .then((data) => data.json())
     .then((data) => {
-      if (data && data.loggedIn !== undefined) {
-        data.loginFailure = !data.loggedIn ? true : false;
+      if (data && data.isLoggedIn !== undefined) {
+        data.loginFailure = !data.isLoggedIn ? true : false;
         dispatch(postLoginSuccess(data));
       }
     })
@@ -43,7 +43,7 @@ export const postLogin = ({ username, password }) => (dispatch) => {
 const postLoginSuccess = (payload) => ({
   type: POST_LOGIN_SUCCESS,
   payload: {
-    loggedIn: payload.loggedIn,
+    isLoggedIn: payload.isLoggedIn,
     message: payload.message,
     loginFailure: payload.loginFailure,
   },
@@ -66,8 +66,8 @@ export const postSignup = ({ username, password }) => (dispatch) => {
   })
     .then((data) => data.json())
     .then((data) => {
-      if (data && data.loggedIn !== undefined) {
-        data.loginFailure = !data.loggedIn ? true : false;
+      if (data && data.isLoggedIn !== undefined) {
+        data.loginFailure = !data.isLoggedIn ? true : false;
         dispatch(postSignupSuccess(data));
       }
     })
@@ -83,7 +83,7 @@ const postSignupRequest = () => ({
 const postSignupSuccess = (payload) => ({
   type: POST_SIGNUP_SUCCESS,
   payload: {
-    loggedIn: payload.loggedIn,
+    isLoggedIn: payload.isLoggedIn,
     message: payload.message,
     loginFailure: payload.loginFailure,
   },

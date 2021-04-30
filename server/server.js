@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const quizController = require('./controllers/quizController');
 const quizControllerDB = require('./controllers/quizControllerDB');
 const userController = require('./controllers/userController');
-const cookieController = require('./controllers/cookieController');
 const sessionController = require('./controllers/sessionController');
 const scoreController = require('./controllers/scoreController');
 const questionController = require('./controllers/questionController');
@@ -20,35 +19,28 @@ app.use(express.static('/public'));
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
 app.get('/', (req, res) => {
-  //get request to login/signup page
   return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
 
-app.get(
-  '/check-session',
-  sessionController.verifySession,
-  sessionController.verifySessionJWT,
-  (req, res) => {
-    // console.log('session isLoggedIn', res.locals.isLoggedIn);
-    return res.status(200).json(res.locals.isLoggedIn);
-  }
-);
+app.get('/check-session', sessionController.verifySession, (req, res) => {
+  return res.status(200).json(res.locals.isLoggedIn);
+});
 
 app.post(
   '/signup',
-  userController.checkUsernameExists,
+  userController.checkIfUsernameExists,
   userController.encryptPassword,
   userController.createUser,
-  cookieController.setSSIDCookie,
-  cookieController.setSSIDJWT,
   sessionController.startSession,
   (req, res) => {
-    if (res.locals.usernameExists) {
+    if (res.locals.usernameTaken) {
       return res
         .status(200)
-        .json({ message: 'Username already taken.', loggedIn: false });
+        .json({ message: 'Username already taken.', isLoggedIn: false });
     }
-    return res.status(200).json({ message: 'New user added!', loggedIn: true });
+    return res
+      .status(200)
+      .json({ message: 'New user added.', isLoggedIn: true });
   }
 );
 
@@ -56,27 +48,23 @@ app.post(
   '/login',
   userController.encryptPassword,
   userController.verifyPassword,
-  userController.getUserInfo,
-  cookieController.setSSIDCookie,
+  userController.getUserID,
   sessionController.startSession,
   (req, res) => {
-    if (!res.locals.loggedIn) {
-      // on failed sign in, send boolean false- to update
+    if (!res.locals.isLoggedIn) {
       return res
         .status(200)
-        .json({ message: 'Incorrect username/password', loggedIn: false });
+        .json({ message: 'Incorrect username/password.', isLoggedIn: false });
     }
-    // on successful sign in, send boolean true - to update
     return res
       .status(200)
-      .json({ message: 'Log in successful', loggedIn: true });
+      .json({ message: 'Log in successful.', isLoggedIn: true });
   }
 );
 
 app.get(
   '/quiz-overflow',
   sessionController.verifySession,
-  sessionController.verifySessionJWT,
   quizController.getQuestion,
   (req, res) => {
     // after frontend is ready to test, see if we can redirect to '/' in the case a session expires
@@ -92,8 +80,6 @@ app.get(
 app.get(
   '/quiz-overflowDB',
   sessionController.verifySession,
-  sessionController.verifySessionJWT,
-
   quizControllerDB.getQuestion,
   (req, res) => {
     // console.log('session isLoggedIn', res.locals.isLoggedIn);
@@ -107,8 +93,6 @@ app.get(
 app.get(
   '/high-score',
   sessionController.verifySession,
-  userController.getUserInfo,
-
   scoreController.getHighScore,
   (req, res) => {
     if (!res.locals.isLoggedIn) {
@@ -121,11 +105,8 @@ app.get(
 app.put(
   '/high-score',
   sessionController.verifySession,
-  userController.getUserInfo,
-
   scoreController.getHighScore,
   scoreController.updateHighScore,
-  // scoreController.getHighScore,
   (req, res) => {
     if (!res.locals.isLoggedIn) {
       return res.status(200).json('Invalid session');
@@ -139,7 +120,6 @@ app.post('/questions', questionController.addQuestion, (req, res) => {
 });
 
 app.get('/leaderboard', scoreController.getLeaderboard, (req, res) => {
-  // error check?
   return res.status(200).json(res.locals.leaderboard);
 });
 
@@ -147,6 +127,7 @@ app.use((req, res, next) => {
   return res.status(404).send('Not Found');
 });
 
+// global error checker
 app.use((err, req, res, next) => {
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',

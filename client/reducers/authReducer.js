@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
 
 const initialState = {
-  loggedIn: false,
+  isLoggedIn: false,
   message: null,
   showSignup: false,
   loginFailure: false,
@@ -12,10 +12,10 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.POST_LOGIN_SUCCESS: {
       console.log('authReducer:POST_LOGIN_SUCCESS');
-      const { loggedIn, message, loginFailure } = action.payload;
+      const { isLoggedIn, message, loginFailure } = action.payload;
       return {
         ...state,
-        loggedIn,
+        isLoggedIn,
         message,
         loginFailure,
       };
@@ -23,7 +23,7 @@ const authReducer = (state = initialState, action) => {
     case types.POST_LOGIN_FAILURE: {
       return {
         ...state,
-        loggedIn: action.payload,
+        isLoggedIn: action.payload,
       };
     }
     case types.POST_SIGNUP_REQUEST: {
@@ -32,10 +32,10 @@ const authReducer = (state = initialState, action) => {
       };
     }
     case types.POST_SIGNUP_SUCCESS: {
-      const { loggedIn, message, loginFailure } = action.payload;
+      const { isLoggedIn, message, loginFailure } = action.payload;
       return {
         ...state,
-        loggedIn,
+        isLoggedIn,
         message,
         loginFailure,
       };
@@ -43,7 +43,7 @@ const authReducer = (state = initialState, action) => {
     case types.POST_SIGNUP_FAILURE: {
       return {
         ...state,
-        loggedIn: action.payload,
+        isLoggedIn: action.payload,
       };
     }
     case types.SHOW_SIGNUP: {
@@ -55,7 +55,7 @@ const authReducer = (state = initialState, action) => {
     case types.LOGIN_STATUS: {
       return {
         ...state,
-        loggedIn: action.payload,
+        isLoggedIn: action.payload,
       };
     }
     default: {
