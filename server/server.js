@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static('/public'));
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
