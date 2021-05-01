@@ -20,7 +20,7 @@ export const checkSession = () => {
 };
 
 export const postLogin = ({ username, password }) => (dispatch) => {
-  fetch('/login', {
+  fetch('/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/JSON' },
     body: JSON.stringify({
@@ -56,7 +56,7 @@ const postLoginFailure = (err) => ({
 
 export const postSignup = ({ username, password }) => (dispatch) => {
   dispatch(postSignupRequest());
-  fetch('/signup', {
+  fetch('/auth/sign-up', {
     method: 'POST',
     headers: { 'Content-Type': 'application/JSON' },
     body: JSON.stringify({

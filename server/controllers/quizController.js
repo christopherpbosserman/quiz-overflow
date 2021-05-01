@@ -7,7 +7,7 @@ let anyMoreQuestions = true;
 
 quizController.getQuestion = (req, res, next) => {
   if (res.locals.isLoggedIn) {
-    // check if questions is empty, send response "OUT OF QUESTIONS"
+    // check if questions is empty, send resultonse "OUT OF QUESTIONS"
 
     if (!anyMoreQuestions) {
       res.locals.questions = null;
@@ -19,7 +19,7 @@ quizController.getQuestion = (req, res, next) => {
       fetch('https://opentdb.com/api.php?amount=50&category=18&type=multiple')
         .then((data) => data.json())
         .then((data) => {
-          if (data.response_code) {
+          if (data.resultonse_code) {
             res.locals.questions = null;
             return next();
           }
