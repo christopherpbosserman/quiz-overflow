@@ -20,7 +20,7 @@ class App extends Component {
 
   componentDidMount() {
     // console.log('App componentDidMount fired...');
-    fetch('/check-session')
+    fetch('/auth/verify-session')
       .then((res) => res.json())
       .then((bool) => {
         this.props.changeLoginStatus(bool);
