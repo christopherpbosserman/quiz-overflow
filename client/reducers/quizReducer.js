@@ -4,10 +4,10 @@ const initialState = {
   card: {
     question: 'Loading...',
     choices: [
-      { _id: 1, text: '...', is_correct: true },
-      { _id: 2, text: '...', is_correct: false },
-      { _id: 3, text: '...', is_correct: false },
-      { _id: 4, text: '...', is_correct: false },
+      { text: '...', is_correct: true },
+      { text: '...', is_correct: false },
+      { text: '...', is_correct: false },
+      { text: '...', is_correct: false },
     ],
   },
   deck: [],

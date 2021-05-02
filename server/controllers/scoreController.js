@@ -4,43 +4,35 @@ const scoreController = {};
 
 scoreController.getHighScore = (req, res, next) => {
   console.log('scoreController.getHighScore fired...');
-  if (res.locals.isLoggedIn) {
-    const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${res.locals.userID}`;
-    db.query(getScoreQuery, (err, queryRes) => {
-      if (err) {
-        console.log('error in getHighScore: ', err);
-        return next(err);
-      } else if (!queryRes.rows[0]) {
-        res.locals.highScore = 0;
-      } else {
-        res.locals.highScore = queryRes.rows[0].high_score;
-      }
-      return next();
-    });
-  } else {
+  const getScoreQuery = `SELECT high_score FROM users WHERE users._id = ${res.locals.userID}`;
+  db.query(getScoreQuery, (err, queryRes) => {
+    if (err) {
+      console.log('error in getHighScore: ', err);
+      return next(err);
+    } else if (!queryRes.rows[0]) {
+      res.locals.highScore = 0;
+    } else {
+      res.locals.highScore = queryRes.rows[0].high_score;
+    }
     return next();
-  }
+  });
 };
 
 scoreController.updateHighScore = (req, res, next) => {
-  if (res.locals.isLoggedIn) {
-    console.log(req.body);
-    console.log(typeof req.body.score);
-    if (req.body.score > res.locals.highScore) {
-      const updateScoreQuery = `UPDATE users SET high_score = ${req.body.score} WHERE users._id = ${res.locals.userID}`;
-      db.query(updateScoreQuery, (err, queryRes) => {
-        if (err) {
-          console.log('error in updateHighScore: ', err);
-          return next(err);
-        } else {
-          console.log('updated score');
-          res.locals.highScore = req.body.score;
-          return next();
-        }
-      });
-    } else {
-      return next();
-    }
+  console.log(req.body);
+  console.log(typeof req.body.score);
+  if (req.body.score > res.locals.highScore) {
+    const updateScoreQuery = `UPDATE users SET high_score = ${req.body.score} WHERE users._id = ${res.locals.userID}`;
+    db.query(updateScoreQuery, (err, queryRes) => {
+      if (err) {
+        console.log('error in updateHighScore: ', err);
+        return next(err);
+      } else {
+        console.log('updated score');
+        res.locals.highScore = req.body.score;
+        return next();
+      }
+    });
   } else {
     return next();
   }
