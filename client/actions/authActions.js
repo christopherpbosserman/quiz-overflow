@@ -14,10 +14,10 @@ export const changeLoginStatus = (bool) => ({
   payload: bool,
 });
 
-export const checkSession = () => {
-  console.log('checkSession fired...');
-  fetch('/quiz-overflow');
-};
+// export const checkSession = () => {
+//   console.log('checkSession fired...');
+//   fetch('/quiz-overflow');
+// };
 
 export const postLogin = ({ username, password }) => (dispatch) => {
   fetch('/auth/login', {
