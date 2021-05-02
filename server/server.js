@@ -29,14 +29,20 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
 
-app.get('/quiz-overflow', quizController.getQuestions, (req, res) => {
+app.get('/quiz-overflow', quizController.getQuestionsOLD, (req, res) => {
   return res.status(200).json(res.locals);
 });
 
-app.get('/testing', quizController.getQuestions2, (req, res) => {
-  console.log('done');
-  return res.status(200).json(res.locals);
-});
+app.get(
+  '/testing',
+  quizController.getQuestions,
+  quizController.getChoices,
+  quizController.formatQuiz,
+  quizController.shuffleQuiz,
+  (req, res) => {
+    return res.status(200).json(res.locals);
+  }
+);
 
 app.get(
   '/high-score',
