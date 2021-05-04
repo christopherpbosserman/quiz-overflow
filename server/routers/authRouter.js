@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const userController = require('../controllers/auth/userController');
-const sessionController = require('../controllers/auth/sessionController');
+const userController = require('../controllers/userController');
+const sessionController = require('../controllers/sessionController');
 
-router.get('/verify-session', sessionController.verifySession, (req, res) => {
-  return res.status(200).json(res.locals.isLoggedIn);
-});
+router.get(
+  '/verify-session',
+  sessionController.verifySessionAndGetUserID,
+  (req, res) => {
+    return res.status(200).json(res.locals.isLoggedIn);
+  }
+);
 
 router.post(
   '/sign-up',

@@ -1,10 +1,10 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const PGURI = process.env.PGURI;
+const PG_URI = process.env.PG_URI;
 
 const pool = new Pool({
-  connectionString: PGURI,
+  connectionString: PG_URI,
   max: 3,
 });
 

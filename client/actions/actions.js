@@ -2,10 +2,10 @@ import * as types from './actionTypes';
 
 export const getNewDeck = () => (dispatch) => {
   console.log('actions:getNewDeck fired...');
-  fetch('/quiz-overflow')
+  fetch('/game/quiz-overflow')
     .then((res) => res.json())
     .then((data) => {
-      const deck = data.questions;
+      const deck = data.quiz;
       return dispatch({
         type: types.NEW_DECK_RECEIVED,
         payload: deck,
@@ -24,7 +24,7 @@ export const getNewCard = (deckSize) => (dispatch) => {
 
 export const getHighScore = () => (dispatch) => {
   dispatch({ type: types.HIGHSCORE_REQUEST });
-  fetch('/high-score')
+  fetch('/game/high-score')
     .then((res) => res.json())
     .then((res) =>
       dispatch({
@@ -37,14 +37,13 @@ export const getHighScore = () => (dispatch) => {
 export const updateHighScore = (score) => (dispatch) => {
   console.log('actions:updateHighScore fired...');
   console.log(score);
-  fetch('/high-score', {
+  fetch('/game/high-score', {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ score: score }),
   })
     .then((res) => res.json())
     .then((res) => {
-      console.log('reeeeeeeee', res);
       dispatch({
         type: types.HIGHSCORE_RECEIVED,
         payload: res.highScore,
