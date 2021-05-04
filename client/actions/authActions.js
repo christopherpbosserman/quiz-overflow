@@ -16,7 +16,7 @@ export const changeLoginStatus = (bool) => ({
 
 // export const checkSession = () => {
 //   console.log('checkSession fired...');
-//   fetch('/quiz-overflow');
+//   fetch('/game/quiz-overflow');
 // };
 
 export const postLogin = ({ username, password }) => (dispatch) => {

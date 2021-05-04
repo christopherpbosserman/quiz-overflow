@@ -3,12 +3,6 @@ const path = require('path');
 
 const cookieParser = require('cookie-parser');
 
-const sessionController = require('./controllers/auth/sessionController');
-
-const quizController = require('./controllers/quizController');
-const scoreController = require('./controllers/scoreController');
-const questionController = require('./controllers/questionController');
-
 const app = express();
 const PORT = 3000;
 
@@ -24,50 +18,18 @@ app.use('/build', express.static(path.resolve(__dirname, '../build')));
 // routers
 const authRouter = require('./routers/authRouter');
 app.use('/auth', authRouter);
+const gameRouter = require('./routers/gameRouter');
+app.use('/game', gameRouter);
 
-app.get('/', (req, res) => {
-  return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
-});
-
-app.get('/quiz-overflow', quizController.getQuestionsOLD, (req, res) => {
-  return res.status(200).json(res.locals);
-});
-
-app.get(
-  '/testing',
-  quizController.getQuestions,
-  quizController.getChoices,
-  quizController.formatQuiz,
-  quizController.shuffleQuiz,
-  (req, res) => {
-    return res.status(200).json(res.locals);
-  }
-);
-
-app.get(
-  '/high-score',
-  sessionController.verifySession,
-  scoreController.getHighScore,
-  (req, res) => {
-    return res.status(200).json(res.locals);
-  }
-);
-
-app.put(
-  '/high-score',
-  scoreController.getHighScore,
-  scoreController.updateHighScore,
-  (req, res) => {
-    return res.status(200).json(res.locals);
-  }
-);
-
+// add questions API
+// TODO - move to game
+const questionController = require('./controllers/questionController');
 app.post('/questions', questionController.addQuestion, (req, res) => {
   return res.status(200).send(res.locals.addedMsg);
 });
 
-app.get('/leaderboard', scoreController.getLeaderboard, (req, res) => {
-  return res.status(200).json(res.locals.leaderboard);
+app.get('/', (req, res) => {
+  return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
 
 app.use((req, res, next) => {

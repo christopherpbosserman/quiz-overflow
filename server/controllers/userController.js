@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-const db = require('../../models/quizModels');
+const db = require('../models/quizModels');
 
 const SALT_WORK_FACTOR = 6;
 
@@ -121,4 +121,38 @@ userController.getUserID = (req, res, next) => {
   } else return next();
 };
 
+userController.getHighScore = (req, res, next) => {
+  console.log('userController.getHighScore fired...');
+  const query = 'SELECT high_score FROM users WHERE users._id = ($1)';
+  const values = [res.locals.userID];
+
+  db.query(query, values)
+    .then((result) => {
+      res.locals.highScore = result.rows[0].high_score;
+      return next();
+    })
+    .catch((err) => {
+      return next({
+        log: `Error in userController.getHighScore middleware: ${err}`,
+        message: { err: 'An error occurred' },
+      });
+    });
+};
+
+userController.updateHighScore = (req, res, next) => {
+  console.log('userController.updateHighScore fired...');
+  const { score } = req.body;
+  const { highScore, userID } = res.locals;
+
+  //TODO implement this in frontend
+  if (score > highScore) {
+    const query = 'UPDATE users SET high_score = ($1) WHERE users._id = ($2)';
+    const values = [score, userID];
+
+    db.query(query, values).then((result) => {
+      res.locals.highScore = score;
+      return next();
+    });
+  }
+};
 module.exports = userController;

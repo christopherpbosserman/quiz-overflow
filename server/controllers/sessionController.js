@@ -28,8 +28,8 @@ sessionController.startSession = (req, res, next) => {
   }
 };
 
-sessionController.verifySession = (req, res, next) => {
-  console.log('sessionController.verifySession fired...');
+sessionController.verifySessionAndGetUserID = (req, res, next) => {
+  console.log('sessionController.verifySessionAndGetUserID fired...');
   const { SSID } = req.cookies;
 
   // verify JWT read from cookies, grab userID and allow access

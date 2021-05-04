@@ -15,14 +15,6 @@ const Card = (props) => {
 
       if (choices[selected].is_correct) {
         props.correctChoice(props.currentScore, props.highScore);
-        // props.getNewCard(props.deck);
-
-        // console.log('AAAAAAAAAAAAAAAAAA', props.currentScore, props.highScore);
-        // if (props.currentScore > props.highScore) {
-        //   props.newHighScore(props.currentScore);
-        //   props.updateHighScore(props.currentScore);
-        //   console.log('New Highscore!!!');
-        // }
       }
       props.getNewCard(props.deck);
     }
@@ -38,7 +30,7 @@ const Card = (props) => {
           name="quiz"
           id={`choice${i}`}
         />
-        <label htmlFor={`choice${i}`}>{decode(choices[i].text)}</label>
+        <label htmlFor={`choice${i}`}>{decode(choices[i].choice)}</label>
       </div>
     );
   }
