@@ -15,7 +15,7 @@ npm install
 Create and populate the database.
 
 ```
-psql -d <'Your Postgres URI> -f quiz_overflow_postgres_create.sql
+psql -d <'Your Postgres URI'> -f quiz_overflow_postgres_create.sql
 ```
 
 Create a `.env` file in the root directory of the project to store your Postgres URI and JSON Web Token Private Key.
