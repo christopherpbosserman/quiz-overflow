@@ -4,10 +4,10 @@ const initialState = {
   card: {
     question: 'Loading...',
     choices: [
-      { text: '...', is_correct: true },
-      { text: '...', is_correct: false },
-      { text: '...', is_correct: false },
-      { text: '...', is_correct: false },
+      { choice: '...', isCorrect: true },
+      { choice: '...', isCorrect: false },
+      { choice: '...', isCorrect: false },
+      { choice: '...', isCorrect: false },
     ],
   },
   deck: [],
@@ -64,7 +64,6 @@ const quizReducer = (state = initialState, action) => {
 
     case types.HIGHSCORE_RECEIVED: {
       console.log('quizReducer:HIGHSCORE_RECEIVED');
-      console.log('payload', action.payload);
       let highScore = action.payload;
       return {
         ...state,

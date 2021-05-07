@@ -13,7 +13,7 @@ const Card = (props) => {
     if (selected) {
       selected = selected.id.slice(-1);
 
-      if (choices[selected].is_correct) {
+      if (choices[selected].isCorrect) {
         props.correctChoice(props.currentScore, props.highScore);
       }
       props.getNewCard(props.deck);
