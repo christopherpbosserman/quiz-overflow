@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // console.log('App componentDidMount fired...');
+    // console.log('App:componentDidMount fired...');
     fetch('/auth/verify-session')
       .then((res) => res.json())
       .then((bool) => {
@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   render() {
-    // console.log('App render fired...');
+    // console.log('App:render fired...');
     const auth = this.props.isLoggedIn ? <CardContainer /> : <AuthContainer />;
     return <div className="mainContainer">{auth}</div>;
   }

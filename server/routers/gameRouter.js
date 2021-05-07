@@ -6,20 +6,10 @@ const sessionController = require('../controllers/sessionController');
 const userController = require('../controllers/userController');
 
 router.get(
-  '/ALL',
+  '/deck',
   quizController.getQuestionsAndChoices,
-  quizController.formatALL,
-  (req, res) => {
-    return res.status(200).json(res.locals);
-  }
-);
-
-router.get(
-  '/quiz-overflow',
-  quizController.getQuestions,
-  quizController.getChoices,
-  quizController.formatQuiz,
-  quizController.shuffleQuiz,
+  quizController.formatDeck,
+  quizController.shuffleDeck,
   (req, res) => {
     return res.status(200).json(res.locals);
   }
