@@ -1,4 +1,5 @@
 const db = require('../models/quizModels');
+const { all } = require('../routers/gameRouter');
 
 const quizController = {};
 
@@ -6,7 +7,7 @@ quizController.getQuestions = (req, res, next) => {
   console.log('quizController.getQuestions fired...');
 
   const query =
-    'SELECT q._id AS qid, q.text as question FROM quiz_question q ORDER BY q._id';
+    'SELECT q._id AS qid, q.text AS question FROM quiz_question q ORDER BY q._id';
   db.query(query)
     .then((result) => {
       res.locals.questions = result.rows;
@@ -56,7 +57,6 @@ quizController.formatQuiz = (req, res, next) => {
       questionCount += 1;
     }
   });
-
   res.locals.quiz = quiz;
   delete res.locals.questions;
   delete res.locals.choices;
@@ -95,6 +95,63 @@ knuthShuffle = (array) => {
   }
 
   return array;
+};
+
+///////////
+
+quizController.getQuestionsAndChoices = (req, res, next) => {
+  console.log('quizController.getQuestionsAndChoices fired...');
+
+  const query = `SELECT q._id AS questionid, q.text AS question, c.text AS choice, c.is_correct
+                FROM quiz_question q  
+                JOIN quiz_question_choices c
+                ON q._id = c.quiz_question_id
+                ORDER BY q._id`;
+
+  db.query(query)
+    .then((result) => {
+      res.locals.questionsAndChoices = result.rows;
+      return next();
+    })
+    .catch((err) => {
+      return next({
+        log: `Error in quizController.getQuestionsAndChoices middleware: ${err}`,
+        message: { err: 'An error occurred' },
+      });
+    });
+};
+
+quizController.formatALL = (req, res, next) => {
+  console.log('quizController.formatALL fired...');
+
+  const quiz = [];
+  let choicesArray = [];
+  let questionCount = 0;
+
+  res.locals.questionsAndChoices.forEach((row, i) => {
+    let choiceObject = {
+      choice: row.choice,
+      isCorrect: row.is_correct,
+    };
+    choicesArray.push(choiceObject);
+
+    // after every 4 choices, build out question object and add to quiz array
+    if ((i + 1) % 4 === 0) {
+      let questionObject = {
+        questionID: row.questionid,
+        question: row.question,
+        choicesArray,
+      };
+      quiz.push(questionObject);
+      choicesArray = [];
+      questionCount += 1;
+    }
+  });
+
+  res.locals.quiz = quiz;
+  delete res.locals.questionsAndChoices;
+
+  return next();
 };
 
 module.exports = quizController;
