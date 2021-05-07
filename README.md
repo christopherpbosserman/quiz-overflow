@@ -12,14 +12,20 @@ Install all packages.
 npm install
 ```
 
-Create a `.env` file in the root directory of the project to store the Postgress database URI and JSON Web Token Private Key.
+Create and populate the database.
 
 ```
-PG_URI='Postgress database URI'
-JWT_PRIVATE_KEY='JWT Key'
+psql -d <'Your Postgres URI> -f quiz_overflow_postgres_create.sql
 ```
 
-After installation is complete, compile all files and start your server.
+Create a `.env` file in the root directory of the project to store your Postgres URI and JSON Web Token Private Key.
+
+```
+PG_URI='Your Postgres URI'
+JWT_PRIVATE_KEY='Your JWT Key'
+```
+
+Compile all files and start the server.
 
 ```
 npm run build
