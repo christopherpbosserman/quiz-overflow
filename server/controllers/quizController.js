@@ -3,7 +3,7 @@ const db = require('../models/quizModels');
 const quizController = {};
 
 quizController.getQuestionsAndChoices = (req, res, next) => {
-  console.log('quizController.getQuestionsAndChoices fired...');
+  // console.log('quizController.getQuestionsAndChoices fired...');
 
   const query = `SELECT q._id AS questionid, q.text AS question, c.text AS choice, c.is_correct
                 FROM quiz_question q  
@@ -25,7 +25,7 @@ quizController.getQuestionsAndChoices = (req, res, next) => {
 };
 
 quizController.formatDeck = (req, res, next) => {
-  console.log('quizController.formatDeck fired...');
+  // console.log('quizController.formatDeck fired...');
 
   const deck = [];
   let choices = [];
@@ -56,7 +56,7 @@ quizController.formatDeck = (req, res, next) => {
 };
 
 quizController.shuffleDeck = (req, res, next) => {
-  console.log('quizController.shuffleDeck fired...');
+  // console.log('quizController.shuffleDeck fired...');
   // shuffle questions
   knuthShuffle(res.locals.deck);
 

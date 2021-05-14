@@ -21,13 +21,6 @@ app.use('/auth', authRouter);
 const gameRouter = require('./routers/gameRouter');
 app.use('/game', gameRouter);
 
-// add questions API
-// TODO - move to game
-const questionController = require('./controllers/questionController');
-app.post('/questions', questionController.addQuestion, (req, res) => {
-  return res.status(200).send(res.locals.addedMsg);
-});
-
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 });
