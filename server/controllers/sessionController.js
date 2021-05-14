@@ -6,7 +6,7 @@ const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
 const sessionController = {};
 
 sessionController.startSession = (req, res, next) => {
-  console.log('sessionController.startSession fired...');
+  // console.log('sessionController.startSession fired...');
 
   if (res.locals.isLoggedIn) {
     const { userID } = res.locals;
@@ -29,7 +29,7 @@ sessionController.startSession = (req, res, next) => {
 };
 
 sessionController.verifySessionAndGetUserID = (req, res, next) => {
-  console.log('sessionController.verifySessionAndGetUserID fired...');
+  // console.log('sessionController.verifySessionAndGetUserID fired...');
   const { SSID } = req.cookies;
 
   // verify JWT read from cookies, grab userID and allow access

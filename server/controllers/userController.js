@@ -7,7 +7,7 @@ const SALT_WORK_FACTOR = 6;
 const userController = {};
 
 userController.checkIfUsernameExists = (req, res, next) => {
-  console.log('userController.checkIfUsernameExists fired...');
+  // console.log('userController.checkIfUsernameExists fired...');
   const { username } = req.body;
   const query = 'SELECT username FROM users WHERE username = ($1)';
   const values = [username];
@@ -28,7 +28,7 @@ userController.checkIfUsernameExists = (req, res, next) => {
 };
 
 userController.encryptPassword = (req, res, next) => {
-  console.log('userController.encryptPassword fired...');
+  // console.log('userController.encryptPassword fired...');
   const { password } = req.body;
 
   bcrypt
@@ -46,7 +46,7 @@ userController.encryptPassword = (req, res, next) => {
 };
 
 userController.createUser = (req, res, next) => {
-  console.log('userController.createUser fired...');
+  // console.log('userController.createUser fired...');
   const { username } = req.body;
   const { encryptedPassword } = res.locals;
   const query =
@@ -72,7 +72,7 @@ userController.createUser = (req, res, next) => {
 };
 
 userController.verifyPassword = (req, res, next) => {
-  console.log('userController.verifyPassword fired...');
+  // console.log('userController.verifyPassword fired...');
   const { username, password } = req.body;
   const query =
     'SELECT password AS encryptedpassword FROM users WHERE username = ($1)';
@@ -99,7 +99,7 @@ userController.verifyPassword = (req, res, next) => {
 };
 
 userController.getUserID = (req, res, next) => {
-  console.log('userController.getUserID fired...');
+  // console.log('userController.getUserID fired...');
 
   if (res.locals.isLoggedIn) {
     const { username } = req.body;
@@ -122,7 +122,7 @@ userController.getUserID = (req, res, next) => {
 };
 
 userController.getHighScore = (req, res, next) => {
-  console.log('userController.getHighScore fired...');
+  // console.log('userController.getHighScore fired...');
   const query = 'SELECT high_score FROM users WHERE users._id = ($1)';
   const values = [res.locals.userID];
 
@@ -140,7 +140,7 @@ userController.getHighScore = (req, res, next) => {
 };
 
 userController.updateHighScore = (req, res, next) => {
-  console.log('userController.updateHighScore fired...');
+  // console.log('userController.updateHighScore fired...');
   const { score } = req.body;
   const { highScore, userID } = res.locals;
 

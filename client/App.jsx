@@ -1,38 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AuthContainer from './containers/AuthContainer';
 import CardContainer from './containers/CardContainer';
 import * as authActions from './actions/authActions';
 
-const mapStateToProps = (state) => ({
-  isLoggedIn: state.auth.isLoggedIn,
-});
+export default () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
-const mapDispatchToProps = (dispatch) => ({
-  changeLoginStatus: (bool) => dispatch(authActions.changeLoginStatus(bool)),
-});
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    // console.log('App:componentDidMount fired...');
+  useEffect(() => {
     fetch('/auth/verify-session')
       .then((res) => res.json())
-      .then((bool) => {
-        this.props.changeLoginStatus(bool);
+      .then((sessionStatus) => {
+        dispatch(authActions.changeLoginStatus(sessionStatus));
       })
       .catch((err) => console.log(err));
-  }
+  }, []);
 
-  render() {
-    // console.log('App:render fired...');
-    const auth = this.props.isLoggedIn ? <CardContainer /> : <AuthContainer />;
-    return <div className="mainContainer">{auth}</div>;
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  const auth = isLoggedIn ? <CardContainer /> : <AuthContainer />;
+  return <div className="mainContainer">{auth}</div>;
+};
